@@ -1,0 +1,31 @@
+#Yahoo頭條新聞
+#引入函式庫
+import requests #下載網頁
+from bs4 import BeautifulSoup #HTML解析工具
+import time
+import re
+
+tstart = time.time()#開始時間
+
+# 下載 Yahoo 首頁內容
+url = "https://tw.yahoo.com/"
+r = requests.get(url)# 發出HTTP GET請求
+
+# 確認是否下載成功
+if r.status_code == requests.codes.ok:
+  # 以 BeautifulSoup 解析 HTML 程式碼
+    soup = BeautifulSoup(r.text, "html.parser")
+
+# 以 CSS 的 class 抓出各類頭條新聞
+#find_all找出所有特定標籤節點
+    stories = soup.find_all("a", class_="story-title")
+    #stories = soup.find_all("a", re.compile("story-title"))
+for s in stories:
+    # 新聞標題
+    print("標題：" + s.text)
+    # 新聞網址
+    #get取出HTML節點個屬性(超連結網址)
+    print("網址：" + s.get("href"))
+
+tEnd = time.time() # 結束時間
+print("Run time :"+str(tEnd - tStart)) # 總時間 = 結束-開始時間
